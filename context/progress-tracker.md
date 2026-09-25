@@ -5,11 +5,11 @@ change.
 
 ## Current Phase
 
-- Context authoring (complete) → Project initialization (next)
+- Project initialization (complete) → Unit 02 implementation (complete)
 
 ## Current Goal
 
-- Initialize the Next.js 16 project and apply design tokens before starting Unit 01.
+- Complete Unit 02 — System States and prepare for PR review.
 
 ## Completed
 
@@ -19,6 +19,7 @@ change.
 - `context/ai-workflow-rules.md` — complete
 - `context/ui-context.md` — complete
 - Unit 01 — Design System + Tokens + System States — complete
+- Unit 02 — System States — complete
 
 ## In Progress
 
@@ -26,13 +27,9 @@ change.
 
 ## Next Up
 
-- Initialize Next.js 16 project with TypeScript, Tailwind, App Router
-- Install and configure shadcn/ui (New York style)
-- Install lucide-react
-- Create `lib/utils.ts` with `cn()` helper
-- Apply design tokens from `ui-context.md` to `globals.css`
-- Author `context/feature-specs/01-design-system.md`
-- After the spec exists: Unit 01 — Design System + Tokens + System States
+- PR review for Unit 02 — System States
+- Merge to `development` when CodeRabbit approval is received
+- Pull `development` locally after merge
 
 > **Note:** `context/feature-specs/01-*.md` does not exist yet. Do not start, plan, or implement Unit 01 until that spec file is authored. If the spec is missing at start time, stop and ask — do not invent scope.
 

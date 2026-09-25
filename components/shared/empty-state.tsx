@@ -11,6 +11,7 @@ export type EmptyStateProps = {
   className?: string;
 };
 
+/** Shows a centered empty state with optional icon, description, and action. */
 export function EmptyState({
   icon: Icon,
   title,

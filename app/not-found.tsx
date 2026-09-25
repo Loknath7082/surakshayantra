@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+/** Shows the branded fallback for a missing page. */
 export default function NotFound() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-base px-6">

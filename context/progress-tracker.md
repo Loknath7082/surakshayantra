@@ -53,6 +53,7 @@ change.
 
 ## Session Notes
 
+- Unit 02 PR review: documented all six new system-state functions for docstring coverage.
 - Context files are being authored before any code is written — strictly following the Six-File Context System.
 - `context/feature-specs/` folder will hold numbered spec files (`01-*.md`, `02-*.md`, etc.). No spec files exist yet.
 - Every unit follows the standard flow: read spec → mark IN PROGRESS → implement → verify → commit → push feature branch → PR → CodeRabbit → merge to `development` → release to `main`.

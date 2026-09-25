@@ -1,5 +1,6 @@
 import { Skeleton } from "@/components/shared/skeleton";
 
+/** Shows an accessible skeleton fallback while the route loads. */
 export default function Loading() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-base px-6">

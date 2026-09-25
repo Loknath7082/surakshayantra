@@ -7,6 +7,7 @@ export type SpinnerProps = {
   className?: string;
 };
 
+/** Shows an accessible loading indicator at the requested size. */
 export function Spinner({ size = "md", className }: SpinnerProps) {
   const sizeClassName =
     size === "sm" ? "h-4 w-4" : size === "lg" ? "h-6 w-6" : "h-5 w-5";

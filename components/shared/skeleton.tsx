@@ -7,6 +7,7 @@ export type SkeletonProps = {
   className?: string;
 };
 
+/** Shows a pulsing placeholder with configurable size and shape. */
 export function Skeleton({
   width = "100%",
   height = "1rem",

@@ -7,6 +7,7 @@ export type ErrorPageProps = {
   reset: () => void;
 };
 
+/** Shows the route error fallback with retry and support actions. */
 export default function ErrorPage({ error, reset }: ErrorPageProps) {
   void error;
 

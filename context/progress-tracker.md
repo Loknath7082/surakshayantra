@@ -59,7 +59,8 @@ change.
 - Context files are being authored before any code is written — strictly following the Six-File Context System.
 - `context/feature-specs/` folder will hold numbered spec files (`01-*.md`, `02-*.md`, etc.). No spec files exist yet.
 - Every unit follows the standard flow: read spec → mark IN PROGRESS → implement → verify → commit → push feature branch → PR → CodeRabbit → merge to `development` → release to `main`.
-- CodeRabbit is not yet configured; manual review is the Day 1 fallback.
+- CodeRabbit configured — auto-review on development PRs enabled via `.coderabbit.yaml`.
+- Branch protection: development requires PR + CodeRabbit review.
 - Git is not yet initialized; will be set up during project initialization. `development` branch will be created from `main` at that time.
 - No invariants from `architecture-context.md` may be violated at any point.
 - Human-approved Phase 1 scope change: Vercel Blob moved from Phase 2 reserved to Phase 1 in-scope for Blog/Case Study content JSON and CMS images. Request-flow file uploads (NDA, network diagrams) remain Phase 2.

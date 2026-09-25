@@ -1,26 +1,144 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg-base: #FFFFFF;
+  --bg-surface: #F8FAFC;
+  --bg-elevated: #F1F5F9;
+  --fg-primary: #0F172A;
+  --fg-muted: #64748B;
+  --accent-primary: #2563EB;
+  --accent-secondary: #0891B2;
+  --border-default: #E2E8F0;
+  --state-error: #DC2626;
+  --state-success: #16A34A;
+  --state-warning: #CA8A04;
+  --severity-critical: #DC2626;
+  --severity-high: #EA580C;
+  --severity-medium: #CA8A04;
+  --severity-low: #16A34A;
+  --focus-ring-color: #2563EB;
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+  --focus-ring-style: solid;
+  --overlay-backdrop: rgba(15, 23, 42, 0.40);
+  --overlay-blur: 4px;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 8px 24px rgba(15, 23, 42, 0.10);
+  --shadow-glow-sm: 0 0 8px rgba(37, 99, 235, 0.10);
+  --shadow-glow-md: 0 0 20px rgba(37, 99, 235, 0.15);
+  --gradient-brand: linear-gradient(135deg, #2563EB 0%, #0891B2 100%);
+  --gradient-surface: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
+  --gradient-glow: radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.08), transparent 70%);
+  --z-base: 0;
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-navbar: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+  --z-toast: 1080;
+}
+
+.dark {
+  --bg-base: #0A0E1A;
+  --bg-surface: #0F172A;
+  --bg-elevated: #1E293B;
+  --fg-primary: #F8FAFC;
+  --fg-muted: #94A3B8;
+  --accent-primary: #3B82F6;
+  --accent-secondary: #06B6D4;
+  --border-default: #1E293B;
+  --state-error: #DC2626;
+  --state-success: #16A34A;
+  --state-warning: #CA8A04;
+  --severity-critical: #DC2626;
+  --severity-high: #EA580C;
+  --severity-medium: #CA8A04;
+  --severity-low: #16A34A;
+  --focus-ring-color: #3B82F6;
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+  --focus-ring-style: solid;
+  --overlay-backdrop: rgba(10, 14, 26, 0.75);
+  --overlay-blur: 12px;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --shadow-glow-sm: 0 0 8px rgba(59, 130, 246, 0.15);
+  --shadow-glow-md: 0 0 20px rgba(59, 130, 246, 0.25);
+  --gradient-brand: linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%);
+  --gradient-surface: linear-gradient(180deg, #0F172A 0%, #0A0E1A 100%);
+  --gradient-glow: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.15), transparent 70%);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-base: var(--bg-base);
+  --color-surface: var(--bg-surface);
+  --color-elevated: var(--bg-elevated);
+  --color-primary: var(--fg-primary);
+  --color-muted: var(--fg-muted);
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-secondary: var(--accent-secondary);
+  --color-default: var(--border-default);
+  --color-state-error: var(--state-error);
+  --color-state-success: var(--state-success);
+  --color-state-warning: var(--state-warning);
+  --color-severity-critical: var(--severity-critical);
+  --color-severity-high: var(--severity-high);
+  --color-severity-medium: var(--severity-medium);
+  --color-severity-low: var(--severity-low);
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-xl: 12px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@utility bg-gradient-brand { background-image: var(--gradient-brand); }
+@utility bg-gradient-surface { background-image: var(--gradient-surface); }
+@utility bg-gradient-glow { background-image: var(--gradient-glow); }
+@utility bg-overlay-backdrop { background-color: var(--overlay-backdrop); }
+@utility z-base { z-index: var(--z-base); }
+@utility z-dropdown { z-index: var(--z-dropdown); }
+@utility z-sticky { z-index: var(--z-sticky); }
+@utility z-navbar { z-index: var(--z-navbar); }
+@utility z-modal-backdrop { z-index: var(--z-modal-backdrop); }
+@utility z-modal { z-index: var(--z-modal); }
+@utility z-popover { z-index: var(--z-popover); }
+@utility z-tooltip { z-index: var(--z-tooltip); }
+@utility z-toast { z-index: var(--z-toast); }
+@utility focus-ring {
+  --tw-ring-offset-width: var(--focus-ring-offset);
+  --tw-ring-width: var(--focus-ring-width);
+  --tw-ring-color: var(--focus-ring-color);
+  box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
+}
+
+@layer base {
+  * {
+    border-color: var(--border-default);
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  html {
+    background-color: var(--bg-base);
+    color: var(--fg-primary);
+  }
+
+  body {
+    min-height: 100vh;
+    background: var(--bg-base);
+    color: var(--fg-primary);
+    font-family: var(--font-sans), sans-serif;
+  }
+
+  code,
+  pre {
+    font-family: var(--font-mono), monospace;
+  }
+
+  ::selection {
+    background: var(--accent-primary);
+    color: var(--fg-primary);
+  }
 }

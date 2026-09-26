@@ -74,6 +74,7 @@ Additional rules:
 - `context/progress-tracker.md` must be updated after each important or meaningful implementation change, using its existing structure.
 - `context/progress-tracker.md` must also be updated with the final completion state before closing the unit.
 - No additional sections may be added to `progress-tracker.md` by the agent — the only permitted extra section is `## Future Enhancements / Backlog`.
+- When marking a unit COMPLETE, the `## Completed` section in `progress-tracker.md` must include detailed sub-bullets for that unit — not only the unit name. At minimum: files created/modified, packages installed (with versions if pinned), components added, tokens/config added, and verification results (`tsc --noEmit`, `npm run lint`, `npm run build`).
 
 ## Before Moving to the Next Unit
 
@@ -89,6 +90,7 @@ The current unit satisfies its defined scope and acceptance criteria. Run all ap
 - [ ] No invariant defined in `context/architecture-context.md` was violated.
 - [ ] CodeRabbit review issues (or manual review issues if CodeRabbit is unavailable) have been fixed and re-reviewed.
 - [ ] `context/progress-tracker.md` reflects the completed work and is updated with the final completion state.
+- [ ] `## Completed` in `progress-tracker.md` includes detailed sub-bullets for the unit (files, packages, components, tokens, verification results) — not the unit name alone.
 
 Close & Git Policy: units may only be closed after all verification checks above pass successfully.
 

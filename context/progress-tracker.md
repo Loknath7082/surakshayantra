@@ -5,11 +5,11 @@ change.
 
 ## Current Phase
 
-- Project initialization (complete) → Unit 02 implementation (complete)
+- Unit 03 implementation (complete) → PR review
 
 ## Current Goal
 
-- Complete Unit 02 — System States and prepare for PR review.
+- Review and merge Unit 03 — Database + Domain Models.
 
 ## Completed
 
@@ -20,6 +20,11 @@ change.
 - `context/ui-context.md` — complete
 - Unit 01 — Design System + Tokens + System States — complete
 - Unit 02 — System States — complete
+- Unit 03 — Database + Domain Models — complete
+	- Added `prisma/schema.prisma`, `lib/env.ts`, `lib/prisma.ts`, and the `init-domain-models` migration.
+	- Added `prisma@6.19.3`, `@prisma/client@6.19.3`, and `zod@4.6.5`.
+	- Added the required PostgreSQL datasource, domain enums, models, explicit relations, unique constraints, and restricted foreign keys.
+	- Verification passed: `npx tsc --noEmit`, `npm run lint`, `npm run build`, and `npx prisma migrate status`.
 
 ## In Progress
 
@@ -27,9 +32,8 @@ change.
 
 ## Next Up
 
-- PR review for Unit 02 — System States
-- Merge to `development` when CodeRabbit approval is received
-- Pull `development` locally after merge
+- Commit and create the Unit 03 feature branch PR
+- Wait for CodeRabbit review before merge
 
 > **Note:** `context/feature-specs/01-*.md` does not exist yet. Do not start, plan, or implement Unit 01 until that spec file is authored. If the spec is missing at start time, stop and ask — do not invent scope.
 
@@ -53,6 +57,7 @@ change.
 
 ## Session Notes
 
+- Unit 03 implementation is on `feat/03-database-domain-models`; migration `init-domain-models` applied successfully. TypeScript, lint, and production build pass.
 - Unit 02 PR review: documented all six new system-state functions for docstring coverage.
 - Context files are being authored before any code is written — strictly following the Six-File Context System.
 - `context/feature-specs/` folder will hold numbered spec files (`01-*.md`, `02-*.md`, etc.). No spec files exist yet.

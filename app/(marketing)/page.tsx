@@ -1,11 +1,17 @@
-import Container from "@/components/shared/container";
+import Hero from "@/components/marketing/hero";
+import ServicesOverview from "@/components/marketing/services-overview";
+import MethodologyPreview from "@/components/marketing/methodology-preview";
+import TrustIndicators from "@/components/marketing/trust-indicators";
+import ClosingCta from "@/components/marketing/closing-cta";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <Container>
-      <h1 className="text-3xl font-bold text-primary">
-        Welcome to Surakshayantra
-      </h1>
-    </Container>
+    <>
+      <Hero />
+      <ServicesOverview />
+      <MethodologyPreview />
+      <TrustIndicators />
+      <ClosingCta />
+    </>
   );
 }

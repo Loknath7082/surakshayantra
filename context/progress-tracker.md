@@ -5,11 +5,11 @@ change.
 
 ## Current Phase
 
-- Unit 04 implementation (complete) → PR review
+- Unit 05 implementation (in progress)
 
 ## Current Goal
 
-- Review and merge Unit 04 — Global Layout Shell.
+- Implement Unit 05 — Homepage.
 
 ## Completed
 
@@ -35,14 +35,22 @@ change.
 	- Added shadcn `sheet` component. Fixed sheet.tsx imports for project paths.
 	- Theme toggle uses `useSyncExternalStore` + MutationObserver (no setState-in-effect).
 	- Verification passed: `npx tsc --noEmit`, `npm run lint`, `npm run build`.
+- Unit 05 — Homepage — complete
+	- Created `components/marketing/hero.tsx` with single h1, subtitle, glow overlay, and dual CTAs.
+	- Created `components/marketing/services-overview.tsx` with 5 service cards (VAPT, Web App, Mobile, API, Network) using Lucide icons.
+	- Created `components/marketing/methodology-preview.tsx` with 5 steps, continuous connecting lines on desktop (`hidden lg:flex`) and vertical timeline on mobile (`lg:hidden`).
+	- Created `components/marketing/trust-indicators.tsx` with 4 OWASP/industry alignment statements and success checkmarks.
+	- Created `components/marketing/closing-cta.tsx` with assessment CTA.
+	- Updated `app/(marketing)/page.tsx` to compose all five sections in order as Server Components.
+	- Verification passed: `npx tsc --noEmit`, `npm run lint`, `npm run build`.
 
 ## In Progress
 
-- None.
+- Awaiting CodeRabbit review for Unit 05 PR on `feat/05-homepage`.
 
 ## Next Up
 
-- Wait for CodeRabbit review on Unit 04 PR before merge
+- Verify Unit 05, commit and push the feature branch, create a PR targeting `development`, then wait for CodeRabbit review.
 
 > **Note:** `context/feature-specs/01-*.md` does not exist yet. Do not start, plan, or implement Unit 01 until that spec file is authored. If the spec is missing at start time, stop and ask — do not invent scope.
 

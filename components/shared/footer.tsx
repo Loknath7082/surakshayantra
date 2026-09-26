@@ -87,27 +87,27 @@ export default function Footer() {
           </p>
 
           <div className="flex items-center gap-4">
-            <a
-              href="#"
-              className="text-muted transition-colors hover:text-primary"
+            <span
+              role="img"
+              className="text-muted"
               aria-label="LinkedIn"
             >
-              <Linkedin className="h-5 w-5" />
-            </a>
-            <a
-              href="#"
-              className="text-muted transition-colors hover:text-primary"
+              <Linkedin className="h-5 w-5" aria-hidden="true" />
+            </span>
+            <span
+              role="img"
+              className="text-muted"
               aria-label="Twitter"
             >
-              <Twitter className="h-5 w-5" />
-            </a>
-            <a
-              href="#"
-              className="text-muted transition-colors hover:text-primary"
+              <Twitter className="h-5 w-5" aria-hidden="true" />
+            </span>
+            <span
+              role="img"
+              className="text-muted"
               aria-label="GitHub"
             >
-              <Github className="h-5 w-5" />
-            </a>
+              <Github className="h-5 w-5" aria-hidden="true" />
+            </span>
           </div>
 
           <UptimeIndicator />

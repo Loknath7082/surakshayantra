@@ -15,7 +15,7 @@ export default function Navbar() {
         </Link>
 
         {/* Center: Desktop nav links */}
-        <nav className="hidden md:flex md:items-center md:gap-6">
+        <nav className="hidden xl:flex xl:items-center xl:gap-6">
           {marketingLinks.map((link) => (
             <Link
               key={link.href}
@@ -28,7 +28,7 @@ export default function Navbar() {
         </nav>
 
         {/* Right: Desktop actions */}
-        <div className="hidden md:flex md:items-center md:gap-2">
+        <div className="hidden xl:flex xl:items-center xl:gap-2">
           <ThemeToggle />
           <Button variant="ghost" asChild>
             <Link href="/sign-in">Sign In</Link>
@@ -39,7 +39,7 @@ export default function Navbar() {
         </div>
 
         {/* Mobile actions */}
-        <div className="flex items-center gap-2 md:hidden">
+        <div className="flex items-center gap-2 xl:hidden">
           <ThemeToggle />
           <NavMobileMenu />
         </div>

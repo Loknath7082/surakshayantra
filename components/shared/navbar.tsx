@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Container from "@/components/shared/container";
-import ThemeToggle from "@/components/shared/theme-toggle";
+import { ThemeToggle } from "@/components/shared/theme-toggle";
 import NavMobileMenu from "@/components/shared/nav-mobile-menu";
 import { marketingLinks } from "@/lib/nav-links";
 

@@ -21,9 +21,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}: LayoutProps<"/">) {
   const cookieStore = await cookies();
   const theme = parseTheme(cookieStore.get("theme")?.value);
 

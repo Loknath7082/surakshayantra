@@ -1,7 +1,7 @@
-export interface NavLink {
+export type NavLink = {
   label: string;
   href: string;
-}
+};
 
 export const marketingLinks: NavLink[] = [
   { label: "Home", href: "/" },

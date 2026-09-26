@@ -5,11 +5,11 @@ change.
 
 ## Current Phase
 
-- Unit 03 implementation (complete) → PR review
+- Unit 04 implementation (complete) → PR review
 
 ## Current Goal
 
-- Review and merge Unit 03 — Database + Domain Models.
+- Review and merge Unit 04 — Global Layout Shell.
 
 ## Completed
 
@@ -25,6 +25,16 @@ change.
 	- Added `prisma@6.19.3`, `@prisma/client@6.19.3`, and `zod@4.6.5`.
 	- Added the required PostgreSQL datasource, domain enums, models, explicit relations, unique constraints, and restricted foreign keys.
 	- Verification passed: `npx tsc --noEmit`, `npm run lint`, `npm run build`, and `npx prisma migrate status`.
+- Unit 04 — Global Layout Shell — complete
+	- Modified `app/layout.tsx` to async with cookie-based theme reading via `parseTheme`.
+	- Created `app/(marketing)/layout.tsx` with Navbar, main (pt-16), and Footer.
+	- Moved `app/page.tsx` to `app/(marketing)/page.tsx`; deleted root page.
+	- Created `app/(marketing)/contact/page.tsx` stub.
+	- Created `components/shared/container.tsx`, `navbar.tsx`, `footer.tsx`, `nav-mobile-menu.tsx`, `theme-toggle.tsx`, `uptime-indicator.tsx`.
+	- Created `lib/theme.ts` (Theme type, parseTheme, constants) and `lib/nav-links.ts` (8 marketing links).
+	- Added shadcn `sheet` component. Fixed sheet.tsx imports for project paths.
+	- Theme toggle uses `useSyncExternalStore` + MutationObserver (no setState-in-effect).
+	- Verification passed: `npx tsc --noEmit`, `npm run lint`, `npm run build`.
 
 ## In Progress
 
@@ -32,8 +42,7 @@ change.
 
 ## Next Up
 
-- Commit and create the Unit 03 feature branch PR
-- Wait for CodeRabbit review before merge
+- Wait for CodeRabbit review on Unit 04 PR before merge
 
 > **Note:** `context/feature-specs/01-*.md` does not exist yet. Do not start, plan, or implement Unit 01 until that spec file is authored. If the spec is missing at start time, stop and ask — do not invent scope.
 

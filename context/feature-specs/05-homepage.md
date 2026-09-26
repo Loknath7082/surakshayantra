@@ -10,15 +10,16 @@ Replace the placeholder marketing home page with the full Surakshayantra homepag
 ## Design
 
 - Public marketing page at `/`. Server Component. No auth, no DB, no API, no CMS.
+- Authoritative token mapping: see `context/ui-context.md` → "Token → Tailwind Mapping".
 - Static hardcoded content. No data fetching.
 - **No decorative animations.** Particle effects, gradients that pulse, keyframe motion, `framer-motion` — all deferred. **Functional transitions** (hover/focus color and border changes) are allowed per `ui-context.md`.
 - Layout: single vertical scroll. Each section is a full-width band containing a shared `<Container>`.
 - **Section order + background** (settled):
-  1. Hero — `bg-bg-base` + gradient glow overlay
-  2. Services overview — `bg-bg-surface`
-  3. Methodology preview — `bg-bg-base`
-  4. Trust indicators — `bg-bg-surface`
-  5. Closing CTA — `bg-bg-base`
+  1. Hero — `bg-base` + gradient glow overlay
+  2. Services overview — `bg-surface`
+  3. Methodology preview — `bg-base`
+  4. Trust indicators — `bg-surface`
+  5. Closing CTA — `bg-base`
 - Each section's inner `<Container>` receives `className="py-20 md:py-28"`. This intentionally produces combined vertical spacing between adjacent sections. Approved visual rhythm; do not "fix."
 - Typography: hero `<h1>`, section headings `<h2>`, services card titles `<h3>`. Exactly one `<h1>` on the page. Every card title must render as an actual `<h3>` element, not a styled `<div>` or `<span>`.
 - Icons: `lucide-react` only.
@@ -26,7 +27,7 @@ Replace the placeholder marketing home page with the full Surakshayantra homepag
   - Button / toolbar icons: `h-5 w-5`
   - Feature / card accent icons (services grid): `h-6 w-6`
 - Buttons: shadcn `Button`. Primary `variant="default"`, secondary `variant="outline"`.
-- Cards (services): `bg-bg-elevated`, `border border-border-default`, `rounded-md`, `shadow-sm`.
+- Cards (services): `bg-elevated`, `border border-default`, `rounded-md`, `shadow-sm`.
 - Transitions on interactive elements: `transition-colors` only. No `duration-*` utilities unless they map to a defined token.
 - All CTA links use Next.js `<Link>`. Where a `Button` wraps a `Link`, use the `asChild` pattern.
 - Decorative icons rendered purely for visual emphasis (trust indicator checkmarks, services card icons) receive `aria-hidden="true"`.
@@ -43,12 +44,12 @@ Replace the placeholder marketing home page with the full Surakshayantra homepag
 ### Hero — `components/marketing/hero.tsx`
 
 - Server Component.
-- Wrapper: `<section className="relative overflow-hidden bg-bg-base">`
+- Wrapper: `<section className="relative overflow-hidden bg-base">`
 - Overlay: `<div className="pointer-events-none absolute inset-0 bg-gradient-glow" aria-hidden="true" />`
 - Content wrapper: `<div className="relative z-10"><Container className="py-20 md:py-28">…</Container></div>`
 - Inner: `max-w-3xl mx-auto text-center`
-  - `<h1>`: `Secure Your Digital Future` — `text-4xl md:text-5xl lg:text-6xl font-bold text-fg-primary tracking-tight`
-  - `<p>`: `Professional cybersecurity assessments to identify vulnerabilities before attackers do.` — `mt-6 text-lg md:text-xl text-fg-muted`
+  - `<h1>`: `Secure Your Digital Future` — `text-4xl md:text-5xl lg:text-6xl font-bold text-primary tracking-tight`
+  - `<p>`: `Professional cybersecurity assessments to identify vulnerabilities before attackers do.` — `mt-6 text-lg md:text-xl text-muted`
   - CTA row: `mt-10 flex flex-col sm:flex-row gap-3 justify-center`
     - Primary: `<Button asChild><Link href="/sign-up">Request Assessment</Link></Button>`
     - Secondary: `<Button variant="outline" asChild><Link href="/services">Explore Services</Link></Button>`
@@ -56,10 +57,10 @@ Replace the placeholder marketing home page with the full Surakshayantra homepag
 ### Services Overview — `components/marketing/services-overview.tsx`
 
 - Server Component.
-- Wrapper: `<section className="bg-bg-surface">` + `<Container className="py-20 md:py-28">`
+- Wrapper: `<section className="bg-surface">` + `<Container className="py-20 md:py-28">`
 - Heading block centered:
-  - `<h2>`: `Our Services` — `text-3xl md:text-4xl font-bold text-fg-primary`
-  - Subtitle: `Professional security testing tailored to your digital assets.` — `mt-4 text-lg text-fg-muted`
+  - `<h2>`: `Our Services` — `text-3xl md:text-4xl font-bold text-primary`
+  - Subtitle: `Professional security testing tailored to your digital assets.` — `mt-4 text-lg text-muted`
 - Import line (exact):
   ```ts
   import { Shield, Globe, Smartphone, Plug, Network, type LucideIcon } from "lucide-react";
@@ -82,10 +83,10 @@ Replace the placeholder marketing home page with the full Surakshayantra homepag
     const Icon = service.icon;
     return (
       <Link key={service.href} href={service.href} className="block">
-        <article className="bg-bg-elevated border border-border-default rounded-md p-6 shadow-sm transition-colors hover:border-accent-primary">
+        <article className="bg-elevated border border-default rounded-md p-6 shadow-sm transition-colors hover:border-accent-primary">
           <Icon className="text-accent-primary h-6 w-6" aria-hidden="true" />
-          <h3 className="mt-4 text-lg font-semibold text-fg-primary">{service.title}</h3>
-          <p className="mt-2 text-sm text-fg-muted">{service.description}</p>
+          <h3 className="mt-4 text-lg font-semibold text-primary">{service.title}</h3>
+          <p className="mt-2 text-sm text-muted">{service.description}</p>
         </article>
       </Link>
     );
@@ -95,10 +96,10 @@ Replace the placeholder marketing home page with the full Surakshayantra homepag
 ### Methodology Preview — `components/marketing/methodology-preview.tsx`
 
 - Server Component.
-- Wrapper: `<section className="bg-bg-base">` + `<Container className="py-20 md:py-28">`
+- Wrapper: `<section className="bg-base">` + `<Container className="py-20 md:py-28">`
 - Heading block centered:
-  - `<h2>`: `Our Methodology` — `text-3xl md:text-4xl font-bold text-fg-primary`
-  - Subtitle: `A structured, repeatable process aligned with industry standards.` — `mt-4 text-lg text-fg-muted`
+  - `<h2>`: `Our Methodology` — `text-3xl md:text-4xl font-bold text-primary`
+  - Subtitle: `A structured, repeatable process aligned with industry standards.` — `mt-4 text-lg text-muted`
 - Steps array (exact order):
   ```ts
   const steps = ["Reconnaissance", "Scanning", "Vulnerability Analysis", "Exploitation", "Reporting & Retest"];
@@ -117,10 +118,10 @@ Replace the placeholder marketing home page with the full Surakshayantra homepag
         {index < steps.length - 1 && (
           <div className="absolute top-5 left-1/2 right-0 h-px bg-border-default" aria-hidden="true" />
         )}
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-bg-elevated border border-border-default text-accent-primary font-semibold relative z-10">
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-elevated border border-default text-accent-primary font-semibold relative z-10">
           {index + 1}
         </div>
-        <span className="mt-4 text-fg-primary font-medium">{step}</span>
+        <span className="mt-4 text-primary font-medium">{step}</span>
       </div>
     ))}
   </div>
@@ -135,10 +136,10 @@ Replace the placeholder marketing home page with the full Surakshayantra homepag
     <div className="absolute left-5 top-5 bottom-5 w-px bg-border-default" aria-hidden="true" />
     {steps.map((step, index) => (
       <div key={step} className="flex items-center gap-4 relative">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-bg-elevated border border-border-default text-accent-primary font-semibold relative z-10 shrink-0">
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-elevated border border-default text-accent-primary font-semibold relative z-10 shrink-0">
           {index + 1}
         </div>
-        <span className="text-fg-primary font-medium">{step}</span>
+        <span className="text-primary font-medium">{step}</span>
       </div>
     ))}
   </div>
@@ -155,7 +156,7 @@ Replace the placeholder marketing home page with the full Surakshayantra homepag
   ```ts
   import { CheckCircle2 } from "lucide-react";
   ```
-- Wrapper: `<section className="bg-bg-surface">` + `<Container className="py-20 md:py-28">`
+- Wrapper: `<section className="bg-surface">` + `<Container className="py-20 md:py-28">`
 - No heading.
 - Statements (exact, verbatim):
   ```ts
@@ -172,7 +173,7 @@ Replace the placeholder marketing home page with the full Surakshayantra homepag
   {indicators.map((statement) => (
     <div key={statement} className="flex items-center gap-2">
       <CheckCircle2 className="h-4 w-4 text-state-success" aria-hidden="true" />
-      <span className="text-fg-primary text-base">{statement}</span>
+      <span className="text-primary text-base">{statement}</span>
     </div>
   ))}
   ```
@@ -182,10 +183,10 @@ Replace the placeholder marketing home page with the full Surakshayantra homepag
 ### Closing CTA — `components/marketing/closing-cta.tsx`
 
 - Server Component.
-- Wrapper: `<section className="bg-bg-base">` + `<Container className="py-20 md:py-28">`
+- Wrapper: `<section className="bg-base">` + `<Container className="py-20 md:py-28">`
 - Content: `max-w-2xl mx-auto text-center`
-  - `<h2>`: `Ready to Strengthen Your Security?` — `text-3xl md:text-4xl font-bold text-fg-primary`
-  - `<p>`: `Request a security assessment and discover where your digital assets need protection.` — `mt-4 text-lg text-fg-muted`
+  - `<h2>`: `Ready to Strengthen Your Security?` — `text-3xl md:text-4xl font-bold text-primary`
+  - `<p>`: `Request a security assessment and discover where your digital assets need protection.` — `mt-4 text-lg text-muted`
   - Button: `mt-8` — `<Button asChild><Link href="/sign-up">Request Assessment</Link></Button>`
   - No custom gradient class on this button. Default primary `Button` styling applies.
 
@@ -199,13 +200,13 @@ Replace the placeholder marketing home page with the full Surakshayantra homepag
 - [ ] No `use client` in page or any of the five section components.
 - [ ] No data fetching, no Prisma, no API, no CMS imports.
 - [ ] Exactly one `<h1>` on the page.
-- [ ] Hero section background is `bg-bg-base`.
+- [ ] Hero section background is `bg-base`.
 - [ ] Hero `<h1>` text is exactly `Secure Your Digital Future`.
 - [ ] Hero `<p>` text is exactly `Professional cybersecurity assessments to identify vulnerabilities before attackers do.`
 - [ ] Hero primary CTA: label `Request Assessment`, href `/sign-up`, wrapped via `Button asChild`.
 - [ ] Hero secondary CTA: label `Explore Services`, href `/services`, wrapped via `Button variant="outline" asChild`.
 - [ ] Hero overlay has `pointer-events-none`; content wrapper has `relative z-10`.
-- [ ] Services section background is `bg-bg-surface`.
+- [ ] Services section background is `bg-surface`.
 - [ ] Services grid renders exactly 5 cards in order: VAPT, Web App Testing, Mobile Testing, API Testing, Network Testing.
 - [ ] Each services card `<Link>` uses `key={service.href}`, `href={service.href}`, and `className="block"`.
 - [ ] Services card routes are exactly `/services/vapt`, `/services/web-app`, `/services/mobile`, `/services/api`, `/services/network`.
@@ -216,7 +217,7 @@ Replace the placeholder marketing home page with the full Surakshayantra homepag
 - [ ] Services card descriptions match the exact strings in the spec.
 - [ ] Services subtitle is exactly `Professional security testing tailored to your digital assets.`
 - [ ] Services grid class string is `mt-12 grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5`.
-- [ ] Methodology section background is `bg-bg-base`.
+- [ ] Methodology section background is `bg-base`.
 - [ ] Methodology subtitle is exactly `A structured, repeatable process aligned with industry standards.`
 - [ ] Methodology steps are exactly: `Reconnaissance`, `Scanning`, `Vulnerability Analysis`, `Exploitation`, `Reporting & Retest`, in that order.
 - [ ] Methodology numbered circles render visible numbers 1 through 5 (via `{index + 1}`).
@@ -227,14 +228,14 @@ Replace the placeholder marketing home page with the full Surakshayantra homepag
 - [ ] Methodology has separate desktop (`hidden lg:flex`) and mobile (`lg:hidden flex flex-col`) layouts.
 - [ ] Both methodology layouts use `key={step}` in their `.map()`.
 - [ ] Methodology CTA: label `See Full Methodology`, href `/methodology`, wrapped via `Button variant="outline" asChild`.
-- [ ] Trust indicators section background is `bg-bg-surface`.
+- [ ] Trust indicators section background is `bg-surface`.
 - [ ] Trust indicators file imports `CheckCircle2` explicitly from `lucide-react`.
 - [ ] Trust indicators grid class is `grid grid-cols-1 md:grid-cols-4 gap-6`.
 - [ ] Trust indicators render exactly these four statements, verbatim: `OWASP-aligned methodology`, `Industry-standard testing practices`, `Detailed vulnerability reports`, `Actionable remediation guidance`.
 - [ ] Trust indicator icons are `CheckCircle2` at `h-4 w-4 text-state-success` with `aria-hidden="true"`.
 - [ ] Each trust indicator item uses `key={statement}` in its `.map()`.
 - [ ] Trust indicators contain no numbers, certifications, logos, or experience claims.
-- [ ] Closing CTA section background is `bg-bg-base`.
+- [ ] Closing CTA section background is `bg-base`.
 - [ ] Closing CTA `<h2>` text is exactly `Ready to Strengthen Your Security?`
 - [ ] Closing CTA `<p>` text is exactly `Request a security assessment and discover where your digital assets need protection.`
 - [ ] Closing CTA button: label `Request Assessment`, href `/sign-up`, wrapped via `Button asChild`, default styling (no custom gradient class).

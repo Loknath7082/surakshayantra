@@ -12,11 +12,11 @@ const steps = [
 
 export default function MethodologyPreview() {
   return (
-    <section className="bg-bg-base">
+    <section className="bg-base">
       <Container className="py-20 md:py-28">
         <div className="mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-bold text-fg-primary md:text-4xl">Our Methodology</h2>
-          <p className="mt-4 text-lg text-fg-muted">
+          <h2 className="text-3xl font-bold text-primary md:text-4xl">Our Methodology</h2>
+          <p className="mt-4 text-lg text-muted">
             A structured, repeatable process aligned with industry standards.
           </p>
         </div>
@@ -31,10 +31,10 @@ export default function MethodologyPreview() {
               {index < steps.length - 1 && (
                 <div className="absolute top-5 left-1/2 right-0 h-px bg-border-default" aria-hidden="true" />
               )}
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-bg-elevated border border-border-default text-accent-primary font-semibold relative z-10">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-elevated border border-default text-accent-primary font-semibold relative z-10">
                 {index + 1}
               </div>
-              <span className="mt-4 text-fg-primary font-medium">{step}</span>
+              <span className="mt-4 text-primary font-medium">{step}</span>
             </div>
           ))}
         </div>
@@ -44,10 +44,10 @@ export default function MethodologyPreview() {
           <div className="absolute left-5 top-5 bottom-5 w-px bg-border-default" aria-hidden="true" />
           {steps.map((step, index) => (
             <div key={step} className="flex items-center gap-4 relative">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-bg-elevated border border-border-default text-accent-primary font-semibold relative z-10 shrink-0">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-elevated border border-default text-accent-primary font-semibold relative z-10 shrink-0">
                 {index + 1}
               </div>
-              <span className="text-fg-primary font-medium">{step}</span>
+              <span className="text-primary font-medium">{step}</span>
             </div>
           ))}
         </div>

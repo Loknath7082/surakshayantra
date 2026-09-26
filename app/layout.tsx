@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { cookies } from "next/headers";
+import { parseTheme } from "@/lib/theme";
 
 const geistSans = Geist({
   variable: "--font-sans",
@@ -17,12 +19,18 @@ export const metadata: Metadata = {
   description: "Cybersecurity services, client portal, and admin workspace.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const cookieStore = await cookies();
+  const theme = parseTheme(cookieStore.get("theme")?.value);
+
   return (
     <html
       lang="en"
-      className={`dark ${geistSans.variable} ${jetBrainsMono.variable} antialiased`}
-      suppressHydrationWarning
+      className={`${theme} ${geistSans.variable} ${jetBrainsMono.variable} antialiased`}
     >
       <body className="min-h-screen bg-base text-primary">{children}</body>
     </html>

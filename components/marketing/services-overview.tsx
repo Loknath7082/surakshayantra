@@ -14,11 +14,11 @@ const services: ServiceCard[] = [
 
 export default function ServicesOverview() {
   return (
-    <section className="bg-bg-surface">
+    <section className="bg-surface">
       <Container className="py-20 md:py-28">
         <div className="mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-bold text-fg-primary md:text-4xl">Our Services</h2>
-          <p className="mt-4 text-lg text-fg-muted">
+          <h2 className="text-3xl font-bold text-primary md:text-4xl">Our Services</h2>
+          <p className="mt-4 text-lg text-muted">
             Professional security testing tailored to your digital assets.
           </p>
         </div>
@@ -27,10 +27,10 @@ export default function ServicesOverview() {
             const Icon = service.icon;
             return (
               <Link key={service.href} href={service.href} className="block">
-                <article className="bg-bg-elevated border border-border-default rounded-md p-6 shadow-sm transition-colors hover:border-accent-primary">
+                <article className="bg-elevated border border-default rounded-md p-6 shadow-sm transition-colors hover:border-accent-primary">
                   <Icon className="text-accent-primary h-6 w-6" aria-hidden="true" />
-                  <h3 className="mt-4 text-lg font-semibold text-fg-primary">{service.title}</h3>
-                  <p className="mt-2 text-sm text-fg-muted">{service.description}</p>
+                  <h3 className="mt-4 text-lg font-semibold text-primary">{service.title}</h3>
+                  <p className="mt-2 text-sm text-muted">{service.description}</p>
                 </article>
               </Link>
             );

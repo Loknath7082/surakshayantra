@@ -29,6 +29,7 @@ export default async function RootLayout({
     <html
       lang="en"
       className={`${theme} ${geistSans.variable} ${jetBrainsMono.variable} antialiased`}
+      suppressHydrationWarning
     >
       <body className="min-h-screen bg-base text-primary">{children}</body>
     </html>

@@ -12,7 +12,9 @@ import {
   ValidationError,
 } from "@/lib/errors";
 
-export function handleApiError(error: unknown): NextResponse<ApiResponse<null>> {
+export function handleApiError(
+  error: unknown,
+): NextResponse<ApiResponse<null>> {
   if (error instanceof ZodError) {
     const flattened = z.flattenError(error);
     const message =
@@ -36,7 +38,7 @@ export function handleApiError(error: unknown): NextResponse<ApiResponse<null>> 
           fieldErrors,
         },
       },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -50,7 +52,7 @@ export function handleApiError(error: unknown): NextResponse<ApiResponse<null>> 
           ...(error.fieldErrors ? { fieldErrors: error.fieldErrors } : {}),
         },
       },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -63,7 +65,7 @@ export function handleApiError(error: unknown): NextResponse<ApiResponse<null>> 
           message: error.message,
         },
       },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
@@ -76,7 +78,7 @@ export function handleApiError(error: unknown): NextResponse<ApiResponse<null>> 
           message: error.message,
         },
       },
-      { status: 403 }
+      { status: 403 },
     );
   }
 
@@ -89,7 +91,7 @@ export function handleApiError(error: unknown): NextResponse<ApiResponse<null>> 
           message: error.message,
         },
       },
-      { status: 404 }
+      { status: 404 },
     );
   }
 
@@ -102,19 +104,28 @@ export function handleApiError(error: unknown): NextResponse<ApiResponse<null>> 
           message: "Invalid JSON in request body",
         },
       },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   if (error && typeof error === "object" && "name" in error) {
     const errorName = String(error.name);
-    if (errorName === "PrismaClientKnownRequestError") {
+    if (
+      errorName === "PrismaClientKnownRequestError" ||
+      errorName === "PrismaClientInitializationError"
+    ) {
       const code =
         "code" in error && typeof error.code === "string"
           ? error.code
           : undefined;
 
-      if (code === "P1001" || code === "P2024") {
+      if (
+        code === "P1001" ||
+        code === "P1002" ||
+        code === "P1008" ||
+        code === "P1017" ||
+        code === "P2024"
+      ) {
         logger.error({ err: error, code }, "Database availability error");
         return NextResponse.json<ApiResponse<null>>(
           {
@@ -124,7 +135,7 @@ export function handleApiError(error: unknown): NextResponse<ApiResponse<null>> 
               message: "Internal server error",
             },
           },
-          { status: 500 }
+          { status: 500 },
         );
       }
 
@@ -138,7 +149,7 @@ export function handleApiError(error: unknown): NextResponse<ApiResponse<null>> 
               code: "P2025",
             },
           },
-          { status: 404 }
+          { status: 404 },
         );
       }
 
@@ -152,7 +163,7 @@ export function handleApiError(error: unknown): NextResponse<ApiResponse<null>> 
               code: "P2002",
             },
           },
-          { status: 409 }
+          { status: 409 },
         );
       }
 
@@ -166,7 +177,22 @@ export function handleApiError(error: unknown): NextResponse<ApiResponse<null>> 
               code: "P2003",
             },
           },
-          { status: 400 }
+          { status: 400 },
+        );
+      }
+
+      // Schema / migration errors are server-side faults, not client errors.
+      if (code === "P2021" || code === "P2022" || code === "P2023") {
+        logger.error({ err: error, code }, "Database schema error");
+        return NextResponse.json<ApiResponse<null>>(
+          {
+            success: false,
+            data: null,
+            error: {
+              message: "Internal server error",
+            },
+          },
+          { status: 500 },
         );
       }
 
@@ -179,7 +205,7 @@ export function handleApiError(error: unknown): NextResponse<ApiResponse<null>> 
             ...(code ? { code } : {}),
           },
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -192,7 +218,7 @@ export function handleApiError(error: unknown): NextResponse<ApiResponse<null>> 
             message: "Invalid database query payload",
           },
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
   }
@@ -207,7 +233,7 @@ export function handleApiError(error: unknown): NextResponse<ApiResponse<null>> 
           message: "Internal server error",
         },
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 
@@ -220,6 +246,6 @@ export function handleApiError(error: unknown): NextResponse<ApiResponse<null>> 
         message: "Internal server error",
       },
     },
-    { status: 500 }
+    { status: 500 },
   );
 }

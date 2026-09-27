@@ -5,11 +5,11 @@ change.
 
 ## Current Phase
 
-- Unit 07 implementation (in progress)
+- Unit 08 — Clerk Auth Foundation + Shared Helpers (awaiting CodeRabbit review)
 
 ## Current Goal
 
-- Implement Unit 07 — Static Content Pages + Contact Shell.
+- Await CodeRabbit review for Unit 08 PR on `feat/08-clerk-auth-foundation-shared-helpers`.
 
 ## Completed
 
@@ -56,14 +56,26 @@ change.
 	- Implemented 7 static marketing pages (`about`, `careers`, `methodology`, `responsible-disclosure`, `privacy`, `terms`, `pgp-key`) with consistent metadata, hero sections, and typography.
 	- Implemented `app/(marketing)/contact/page.tsx` with email support card and upcoming form placeholder.
 	- Verification passed: `npx tsc --noEmit`, `npm run lint`, `npm run build`.
+- Unit 08 — Clerk Auth Foundation + Shared Helpers — complete
+	- Installed `@clerk/nextjs`, `pino`, `thread-stream`, `pino-pretty`, `vitest`, `vite`.
+	- Extended `lib/env.ts` with `server-only`, Clerk env validation, relative URL rules, and fallback `LOG_LEVEL` parsing.
+	- Created `lib/logger.ts` with Pino instance, single-level sensitive key redaction, and conditional dev pretty-printing.
+	- Created `lib/api-response.ts` (discriminated union for API responses) and `lib/errors.ts` (6 typed HTTP error classes).
+	- Created `lib/api-error.ts` with `handleApiError` mapping Zod, custom errors, JSON syntax errors, and Prisma error codes.
+	- Created `lib/return-to.ts` and 15 passing Vitest test cases in `lib/__tests__/return-to.test.ts`.
+	- Created `lib/auth.ts` (`AuthResult`, `AuthUser`, `getCurrentUser`, `requireRole`).
+	- Updated `proxy.ts` with `clerkMiddleware`, protected route redirection, inline URL validation, and exclude matcher.
+	- Wrapped root `app/layout.tsx` in `<ClerkProvider>` with props from `lib/env.ts`.
+	- Configured `serverExternalPackages` in `next.config.ts` and created `.env.example`.
+	- Verification passed: `npx tsc --noEmit`, `npm run lint`, `npm run build`, `npm run test`.
 
 ## In Progress
 
-- Awaiting CodeRabbit review for Unit 07 PR on `feat/07-static-content-pages`.
+- Awaiting CodeRabbit review for Unit 08 PR on `feat/08-clerk-auth-foundation-shared-helpers`.
 
 ## Next Up
 
-- Merge Unit 07 PR after CodeRabbit review, then proceed to next unit.
+- Merge Unit 08 PR after CodeRabbit review, then proceed to Unit 09.
 
 > **Note:** `context/feature-specs/01-*.md` does not exist yet. Do not start, plan, or implement Unit 01 until that spec file is authored. If the spec is missing at start time, stop and ask — do not invent scope.
 

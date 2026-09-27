@@ -7,7 +7,7 @@ import { pgpKeyContent } from "@/lib/static-pages";
 export const metadata: Metadata = {
   title: "PGP Key — Surakshayantra",
   description:
-    "Download or copy the Surakshayantra public PGP key for encrypted communications.",
+      "Download or copy the Surakshayantra public PGP key for encrypted communications (currently unavailable).",
 };
 
 export default function PgpKeyPage() {
@@ -34,7 +34,7 @@ export default function PgpKeyPage() {
               </div>
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-primary">How to Use</h2>
+              <h2 className="text-2xl font-bold text-primary">How to Report</h2>
               <ol className="mt-4 space-y-3 list-none pl-0">
                 {pgpKeyContent.usageInstructions.map((instruction, index) => (
                   <li key={instruction} className="flex items-center gap-4">
@@ -49,15 +49,14 @@ export default function PgpKeyPage() {
                 {pgpKeyContent.fallbackMessage}
               </p>
             </div>
-            <p className="text-base text-muted">
-              Send encrypted reports to:{" "}
-              <a
-                href={`mailto:${pgpKeyContent.securityEmail}`}
-                className="text-accent-primary hover:underline"
-              >
-                {pgpKeyContent.securityEmail}
-              </a>
-            </p>
+            <p className="text-base text-muted"> Unencrypted fallback:{" "}
+                          <a
+                            href={`mailto:${pgpKeyContent.securityEmail}`}
+                            className="text-accent-primary hover:underline"
+                          >
+                            Unencrypted fallback
+                          </a>
+                        </p>
           </div>
         </Container>
       </section>

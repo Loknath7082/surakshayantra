@@ -15,6 +15,7 @@ const relativeUrlSchema = (defaultUrl: string) =>
 const envSchema = z.object({
   DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
   CLERK_SECRET_KEY: z.string().min(1, "CLERK_SECRET_KEY is required"),
+  CLERK_WEBHOOK_SECRET: z.string().min(1, "CLERK_WEBHOOK_SECRET is required"),
   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z
     .string()
     .min(1, "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY is required"),
@@ -36,6 +37,7 @@ const envSchema = z.object({
 export const env = envSchema.parse({
   DATABASE_URL: process.env.DATABASE_URL,
   CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
+  CLERK_WEBHOOK_SECRET: process.env.CLERK_WEBHOOK_SECRET,
   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
     process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
   NEXT_PUBLIC_CLERK_SIGN_IN_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL,

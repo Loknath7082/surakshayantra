@@ -207,6 +207,64 @@ describe("POST /api/webhooks/clerk", () => {
     });
   });
 
+  it("returns 400 INVALID_PAYLOAD when event.data.id is missing or not a string", async () => {
+    const req = new Request(url, {
+      method: "POST",
+      headers: defaultHeaders,
+      body: JSON.stringify({
+        type: "user.created",
+        data: {
+          id: "",
+          email_addresses: [
+            { id: "email_1", email_address: "user@example.com" },
+          ],
+          primary_email_address_id: "email_1",
+        },
+      }),
+    });
+
+    const res = await POST(req);
+    const json = await res.json();
+
+    expect(res.status).toBe(400);
+    expect(json).toEqual({
+      success: false,
+      data: null,
+      error: {
+        message: "Malformed payload",
+        code: "INVALID_PAYLOAD",
+      },
+    });
+  });
+
+  it("returns 400 INVALID_PAYLOAD when email_addresses entries are malformed", async () => {
+    const req = new Request(url, {
+      method: "POST",
+      headers: defaultHeaders,
+      body: JSON.stringify({
+        type: "user.created",
+        data: {
+          id: "clerk_user_123",
+          email_addresses: [{ id: "email_1" }],
+          primary_email_address_id: "email_1",
+        },
+      }),
+    });
+
+    const res = await POST(req);
+    const json = await res.json();
+
+    expect(res.status).toBe(400);
+    expect(json).toEqual({
+      success: false,
+      data: null,
+      error: {
+        message: "Malformed payload",
+        code: "INVALID_PAYLOAD",
+      },
+    });
+  });
+
   it("returns 400 PRIMARY_EMAIL_MISSING when primary_email_address_id is null", async () => {
     const req = new Request(url, {
       method: "POST",

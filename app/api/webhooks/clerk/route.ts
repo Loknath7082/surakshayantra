@@ -106,7 +106,16 @@ export async function POST(request: Request): Promise<NextResponse> {
     if (
       !event.data ||
       typeof event.type !== "string" ||
-      !Array.isArray(event.data.email_addresses)
+      typeof event.data.id !== "string" ||
+      !event.data.id.trim() ||
+      !Array.isArray(event.data.email_addresses) ||
+      !event.data.email_addresses.every(
+        (e) =>
+          typeof e === "object" &&
+          e !== null &&
+          typeof e.id === "string" &&
+          typeof e.email_address === "string",
+      )
     ) {
       return NextResponse.json<ApiResponse<null>>(
         {

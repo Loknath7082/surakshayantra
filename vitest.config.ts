@@ -6,6 +6,7 @@ export default defineConfig({
     environment: "node",
     include: ["**/*.test.ts", "**/*.test.tsx"],
     exclude: ["node_modules/**", "ponytail/**", ".next/**"],
+    setupFiles: ["./test/setup.ts"],
   },
   resolve: {
     alias: {

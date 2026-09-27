@@ -5,11 +5,11 @@ change.
 
 ## Current Phase
 
-- Unit 08 — Clerk Auth Foundation + Shared Helpers (awaiting CodeRabbit review)
+- Unit 09 — Disposable Email Pre-check (awaiting CodeRabbit review)
 
 ## Current Goal
 
-- Await CodeRabbit review for Unit 08 PR on `feat/08-clerk-auth-foundation-shared-helpers`.
+- Await CodeRabbit review for Unit 09 PR on `feat/09-disposable-email-precheck`.
 
 ## Completed
 
@@ -68,14 +68,21 @@ change.
 	- Wrapped root `app/layout.tsx` in `<ClerkProvider>` with props from `lib/env.ts`.
 	- Configured `serverExternalPackages` in `next.config.ts` and created `.env.example`.
 	- Verification passed: `npx tsc --noEmit`, `npm run lint`, `npm run build`, `npm run test`.
+- Unit 09 — Disposable Email Pre-check — complete
+	- Created `lib/disposable-emails.ts` with 20-domain list (sorted, lowercase, unique) and `isDisposableEmail()` domain parser.
+	- Created `lib/validations/auth.ts` exporting `signupEmailSchema` and `SignupEmail` type.
+	- Created `app/api/auth/validate-signup/route.ts` public POST endpoint returning `{ allowed: true }` or `400 DISPOSABLE_EMAIL`.
+	- Created `test/setup.ts` mocking `server-only` and setting test environment variables; updated `vitest.config.ts` with `setupFiles`.
+	- Created test suites `lib/__tests__/disposable-emails.test.ts` (12 tests) and `app/api/auth/__tests__/validate-signup.test.ts` (4 tests).
+	- Verification passed: `npx tsc --noEmit`, `npm run lint`, `npm run build`, `npm run test` (31/31 tests passing).
 
 ## In Progress
 
-- Awaiting CodeRabbit review for Unit 08 PR on `feat/08-clerk-auth-foundation-shared-helpers`.
+- Awaiting CodeRabbit review for Unit 09 PR on `feat/09-disposable-email-precheck`.
 
 ## Next Up
 
-- Merge Unit 08 PR after CodeRabbit review, then proceed to Unit 09.
+- Merge Unit 09 PR after CodeRabbit review, then proceed to Unit 10 (User Sync Webhook).
 
 > **Note:** `context/feature-specs/01-*.md` does not exist yet. Do not start, plan, or implement Unit 01 until that spec file is authored. If the spec is missing at start time, stop and ask — do not invent scope.
 

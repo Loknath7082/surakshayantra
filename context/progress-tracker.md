@@ -5,11 +5,11 @@ change.
 
 ## Current Phase
 
-- Unit 10 — User Sync Webhook (awaiting CodeRabbit review)
+- Unit 11 — Auth Pages (in progress)
 
 ## Current Goal
 
-- Await CodeRabbit review for Unit 10 PR on `feat/10-user-sync-webhook`.
+- Implement custom `/sign-in` and `/sign-up` auth pages, OTP verification, and SSO callback per `context/feature-specs/11-auth-pages.md`.
 
 ## Completed
 
@@ -82,13 +82,27 @@ change.
 	- Created `app/api/webhooks/clerk/__tests__/route.test.ts` with 10 comprehensive unit tests covering happy path, signature errors, payload validation, missing primary email, logger verification, and P2002 race fallback.
 	- Verification passed: `npx tsc --noEmit`, `npm run lint`, `npm run build`, `npm run test` (41/41 tests passing across 4 suites).
 
+- Unit 11 — Auth Pages — complete
+	- Deleted stale `app/sign-in` and `app/sign-up` stubs and pinned `@clerk/nextjs` to stable legacy API (`^6.39.7`).
+	- Installed `react-hook-form` and `@hookform/resolvers`.
+	- Extended `lib/validations/auth.ts` with `signInSchema`, `signUpSchema`, `otpSchema`, and corresponding TypeScript types.
+	- Created `components/auth/clerk-error-mapping.ts` mapping Clerk API errors to React Hook Form fields with fallback to form-level error.
+	- Created `components/auth/auth-layout.tsx` two-panel responsive container with brand values, semantic tags, and mode-based headers.
+	- Created `components/auth/oauth-buttons.tsx` for Google and GitHub OAuth redirects using Lucide icons.
+	- Created `components/auth/otp-verify-form.tsx` for 6-digit numeric email verification with auto-submit.
+	- Created `components/auth/sign-in-form.tsx` and `components/auth/sign-up-form.tsx` with credentials authentication, disposable email pre-check validation, MFA/OTP step transitions, and Clerk API error handling.
+	- Created Server Component pages `app/(auth)/sign-in/[[...sign-in]]/page.tsx` and `app/(auth)/sign-up/[[...sign-up]]/page.tsx` with `searchParams` validation, self-referential redirect protection, and authenticated user redirection to `/portal`.
+	- Created Client Component page `app/sso-callback/page.tsx` with `<AuthenticateWithRedirectCallback />` in Suspense boundary.
+	- Created unit test suites `lib/__tests__/validations-auth.test.ts` (12 tests) and `components/auth/__tests__/clerk-error-mapping.test.ts` (6 tests).
+	- Verification passed: `npx tsc --noEmit`, `npm run lint`, `npm run build`, `npm run test` (61/61 tests passing across 6 suites).
+
 ## In Progress
 
-- Awaiting CodeRabbit review for Unit 10 PR on `feat/10-user-sync-webhook`.
+- Awaiting CodeRabbit review for Unit 11 PR on `feat/11-auth-pages`.
 
 ## Next Up
 
-- Merge Unit 10 PR after CodeRabbit review.
+- Merge Unit 11 PR after CodeRabbit review.
 
 > **Note:** `context/feature-specs/01-*.md` does not exist yet. Do not start, plan, or implement Unit 01 until that spec file is authored. If the spec is missing at start time, stop and ask — do not invent scope.
 

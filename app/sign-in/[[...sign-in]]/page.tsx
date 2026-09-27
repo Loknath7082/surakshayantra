@@ -11,7 +11,11 @@ export default async function SignInPage({
 
   return (
     <div className="flex min-h-screen items-center justify-center">
-      <SignIn forceRedirectUrl={validated ?? "/"} />
+      {validated ? (
+        <SignIn forceRedirectUrl={validated} />
+      ) : (
+        <SignIn fallbackRedirectUrl="/" />
+      )}
     </div>
   );
 }

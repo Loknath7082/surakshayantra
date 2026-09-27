@@ -5,11 +5,11 @@ change.
 
 ## Current Phase
 
-- Unit 06 implementation (in progress)
+- Unit 07 implementation (in progress)
 
 ## Current Goal
 
-- Implement Unit 06 — Services + Service Detail.
+- Implement Unit 07 — Static Content Pages + Contact Shell.
 
 ## Completed
 
@@ -49,14 +49,21 @@ change.
 	- Created `app/(marketing)/services/page.tsx` (services listing page with centered heading and 2-column card grid).
 	- Created `app/(marketing)/services/[slug]/page.tsx` (dynamic detail page composing Breadcrumb, Hero with glow, Overview, Scope, Methodology, Deliverables, and Bottom CTA; `generateStaticParams`, `generateMetadata`, and `notFound()` handling).
 	- Verification passed: `npx tsc --noEmit`, `npm run lint`, `npm run build`.
+- Unit 07 — Static Content Pages + Contact Shell — complete
+	- Created `lib/static-pages/types.ts` defining `StaticPageHero`, `StaticPageSection`, and `LegalSection`.
+	- Created 8 data files in `lib/static-pages/` (`about`, `careers`, `methodology`, `responsible-disclosure`, `privacy`, `terms`, `pgp-key`, `contact`) and re-exported via `lib/static-pages/index.ts` with zero React/Next.js imports.
+	- Created reusable UI components `components/marketing/page-hero.tsx`, `sections-body.tsx`, and `legal-page-body.tsx`.
+	- Implemented 7 static marketing pages (`about`, `careers`, `methodology`, `responsible-disclosure`, `privacy`, `terms`, `pgp-key`) with consistent metadata, hero sections, and typography.
+	- Implemented `app/(marketing)/contact/page.tsx` with email support card and upcoming form placeholder.
+	- Verification passed: `npx tsc --noEmit`, `npm run lint`, `npm run build`.
 
 ## In Progress
 
-- Awaiting CodeRabbit review for Unit 06 PR on `feat/06-services`.
+- Awaiting CodeRabbit review for Unit 07 PR on `feat/07-static-content-pages`.
 
 ## Next Up
 
-- Merge Unit 06 PR after CodeRabbit review, then proceed to next unit.
+- Merge Unit 07 PR after CodeRabbit review, then proceed to next unit.
 
 > **Note:** `context/feature-specs/01-*.md` does not exist yet. Do not start, plan, or implement Unit 01 until that spec file is authored. If the spec is missing at start time, stop and ask — do not invent scope.
 

@@ -18,7 +18,7 @@ export const responsibleDisclosureContent: {
     {
       heading: "How to Report",
       paragraphs: [
-        "For sensitive reports, encrypt your message using our PGP key listed on the PGP Key page. Otherwise, email us directly at the address below.",
+        "PGP encryption is currently unavailable. Please contact us by email until the official public key is published."
       ],
       contactEmail: "security@surakshayantra.com",
     },

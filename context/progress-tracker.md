@@ -5,11 +5,11 @@ change.
 
 ## Current Phase
 
-- Unit 09 — Disposable Email Pre-check (awaiting CodeRabbit review)
+- Unit 10 — User Sync Webhook (awaiting CodeRabbit review)
 
 ## Current Goal
 
-- Await CodeRabbit review for Unit 09 PR on `feat/09-disposable-email-precheck`.
+- Await CodeRabbit review for Unit 10 PR on `feat/10-user-sync-webhook`.
 
 ## Completed
 
@@ -75,14 +75,20 @@ change.
 	- Created `test/setup.ts` mocking `server-only` and setting test environment variables; updated `vitest.config.ts` with `setupFiles`.
 	- Created test suites `lib/__tests__/disposable-emails.test.ts` (12 tests) and `app/api/auth/__tests__/validate-signup.test.ts` (4 tests).
 	- Verification passed: `npx tsc --noEmit`, `npm run lint`, `npm run build`, `npm run test` (31/31 tests passing).
+- Unit 10 — User Sync Webhook — complete
+	- Added `svix@^1.40.0` to `package.json`.
+	- Added `CLERK_WEBHOOK_SECRET` validation to `lib/env.ts`, `.env.example`, and `test/setup.ts`.
+	- Created `app/api/webhooks/clerk/route.ts` with Svix webhook signature verification, shape guard, non-`user.created` event ignoring with logger, primary email extraction, and idempotent Prisma upsert with P2002 duplicate collision fallback.
+	- Created `app/api/webhooks/clerk/__tests__/route.test.ts` with 10 comprehensive unit tests covering happy path, signature errors, payload validation, missing primary email, logger verification, and P2002 race fallback.
+	- Verification passed: `npx tsc --noEmit`, `npm run lint`, `npm run build`, `npm run test` (41/41 tests passing across 4 suites).
 
 ## In Progress
 
-- Awaiting CodeRabbit review for Unit 09 PR on `feat/09-disposable-email-precheck`.
+- Awaiting CodeRabbit review for Unit 10 PR on `feat/10-user-sync-webhook`.
 
 ## Next Up
 
-- Merge Unit 09 PR after CodeRabbit review, then proceed to Unit 10 (User Sync Webhook).
+- Merge Unit 10 PR after CodeRabbit review.
 
 > **Note:** `context/feature-specs/01-*.md` does not exist yet. Do not start, plan, or implement Unit 01 until that spec file is authored. If the spec is missing at start time, stop and ask — do not invent scope.
 

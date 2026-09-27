@@ -26,6 +26,7 @@
     "pino": "^10.3.1",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "svix": "^1.40.0",
     "tailwind-merge": "^3.3.1",
     "thread-stream": "^4.2.0",
     "zod": "^4.6.5"

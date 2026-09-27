@@ -5,11 +5,11 @@ change.
 
 ## Current Phase
 
-- Unit 05 implementation (in progress)
+- Unit 06 implementation (in progress)
 
 ## Current Goal
 
-- Implement Unit 05 — Homepage.
+- Implement Unit 06 — Services + Service Detail.
 
 ## Completed
 
@@ -43,14 +43,20 @@ change.
 	- Created `components/marketing/closing-cta.tsx` with assessment CTA.
 	- Updated `app/(marketing)/page.tsx` to compose all five sections in order as Server Components.
 	- Verification passed: `npx tsc --noEmit`, `npm run lint`, `npm run build`.
+- Unit 06 — Services + Service Detail — complete
+	- Created `lib/services-data.ts` (pure data module defining 5 services, `ServiceIconName`, `ServiceContent`, `getServiceBySlug`, `getAllServiceSlugs`).
+	- Created `lib/service-icons.ts` (maps `ServiceIconName` to Lucide icon components without React imports in data layer).
+	- Created `app/(marketing)/services/page.tsx` (services listing page with centered heading and 2-column card grid).
+	- Created `app/(marketing)/services/[slug]/page.tsx` (dynamic detail page composing Breadcrumb, Hero with glow, Overview, Scope, Methodology, Deliverables, and Bottom CTA; `generateStaticParams`, `generateMetadata`, and `notFound()` handling).
+	- Verification passed: `npx tsc --noEmit`, `npm run lint`, `npm run build`.
 
 ## In Progress
 
-- Awaiting CodeRabbit review for Unit 05 PR on `feat/05-homepage`.
+- Awaiting CodeRabbit review for Unit 06 PR on `feat/06-services`.
 
 ## Next Up
 
-- Verify Unit 05, commit and push the feature branch, create a PR targeting `development`, then wait for CodeRabbit review.
+- Merge Unit 06 PR after CodeRabbit review, then proceed to next unit.
 
 > **Note:** `context/feature-specs/01-*.md` does not exist yet. Do not start, plan, or implement Unit 01 until that spec file is authored. If the spec is missing at start time, stop and ask — do not invent scope.
 
@@ -88,6 +94,7 @@ change.
 
 ## Future Enhancements / Backlog
 
+- Admin-editable site content (services, headings, CTA labels, trust text) — needs Prisma model + admin routes + migration of `lib/services-data.ts` to DB.
 - Automatic PDF security reports (Phase 2)
 - Online payment gateway (Phase 2)
 - Vercel Blob file uploads — NDA, network diagrams (Phase 2)

@@ -24,6 +24,9 @@ export interface SignInFormProps {
 export function SignInForm({ returnTo }: SignInFormProps) {
   const [step, setStep] = useState<"form" | "otp">("form");
   const [formError, setFormError] = useState<string | null>(null);
+  const [secondFactorStrategy, setSecondFactorStrategy] = useState<
+    "email_code" | "totp" | "phone_code" | "backup_code"
+  >("email_code");
 
   const router = useRouter();
   const { signIn, setActive, isLoaded } = useSignIn();
@@ -49,12 +52,16 @@ export function SignInForm({ returnTo }: SignInFormProps) {
     return (
       <OtpVerifyForm
         returnTo={returnTo}
-        onVerify={(code) =>
-          signIn.attemptSecondFactor({ strategy: "email_code", code }).then((r) => ({
+        onVerify={async (code) => {
+          const r = await signIn.attemptSecondFactor({
+            strategy: secondFactorStrategy,
+            code,
+          } as Parameters<typeof signIn.attemptSecondFactor>[0]);
+          return {
             status: r.status ?? "",
             createdSessionId: r.createdSessionId ?? null,
-          }))
-        }
+          };
+        }}
         onSuccess={async (sid) => {
           await setActive({ session: sid });
           router.push(returnTo ?? "/portal");
@@ -80,10 +87,19 @@ export function SignInForm({ returnTo }: SignInFormProps) {
       } else if (result.status === "complete") {
         setFormError("Session could not be created. Please try again.");
       } else if (result.status === "needs_second_factor") {
-        const supportsEmailCode = result.supportedSecondFactors?.some(
-          (f) => f.strategy === "email_code",
-        );
-        if (supportsEmailCode) {
+        const supported = result.supportedSecondFactors ?? [];
+        const factor =
+          supported.find((f) => f.strategy === "email_code") ??
+          supported.find((f) => f.strategy === "totp") ??
+          supported.find((f) => f.strategy === "phone_code") ??
+          supported.find((f) => f.strategy === "backup_code");
+
+        if (factor) {
+          const strategy = factor.strategy as "email_code" | "totp" | "phone_code" | "backup_code";
+          setSecondFactorStrategy(strategy);
+          if (strategy === "email_code" || strategy === "phone_code") {
+            await signIn.prepareSecondFactor({ strategy });
+          }
           setStep("otp");
         } else {
           setFormError("Your account requires an MFA method not yet supported. Contact support.");

@@ -15,6 +15,12 @@ type ClerkUserCreatedEvent = {
   };
 };
 
+/**
+ * Checks whether an error is a Prisma unique constraint violation (P2002).
+ *
+ * @param err - Unknown error object to inspect
+ * @returns True if error is a Prisma P2002 known request error
+ */
 function isP2002(err: unknown): boolean {
   return (
     err instanceof Error &&
@@ -24,6 +30,15 @@ function isP2002(err: unknown): boolean {
   );
 }
 
+/**
+ * Handles incoming Clerk webhook events.
+ *
+ * Validates Svix request signature, ignores non-`user.created` events, extracts
+ * the primary email, and idempotently upserts the user into PostgreSQL.
+ *
+ * @param request - Next.js Request object containing Svix headers and raw JSON body
+ * @returns Next.js JSON response with created/existing userId or structured error
+ */
 export async function POST(request: Request): Promise<NextResponse> {
   try {
     const body = await request.text();

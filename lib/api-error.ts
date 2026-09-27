@@ -114,10 +114,35 @@ export function handleApiError(
       errorName === "PrismaClientKnownRequestError" ||
       errorName === "PrismaClientInitializationError"
     ) {
-      const code =
-        "code" in error && typeof error.code === "string"
+      const isInitializationError =
+        errorName === "PrismaClientInitializationError";
+
+      // PrismaClientKnownRequestError uses `code`;
+      // PrismaClientInitializationError uses `errorCode`.
+      const rawCode = isInitializationError
+        ? "errorCode" in error
+          ? error.errorCode
+          : undefined
+        : "code" in error
           ? error.code
           : undefined;
+
+      const code = typeof rawCode === "string" ? rawCode : undefined;
+
+      // Initialization errors with no errorCode are server-side failures.
+      if (isInitializationError && !code) {
+        logger.error({ err: error }, "Database initialization error");
+        return NextResponse.json<ApiResponse<null>>(
+          {
+            success: false,
+            data: null,
+            error: {
+              message: "Internal server error",
+            },
+          },
+          { status: 500 }
+        );
+      }
 
       if (
         code === "P1001" ||

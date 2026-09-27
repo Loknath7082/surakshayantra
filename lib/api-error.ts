@@ -1,6 +1,6 @@
 import "server-only";
 import { NextResponse } from "next/server";
-import { ZodError } from "zod";
+import { z, ZodError } from "zod";
 import type { ApiResponse } from "@/lib/api-response";
 import { logger } from "@/lib/logger";
 import {
@@ -14,9 +14,14 @@ import {
 
 export function handleApiError(error: unknown): NextResponse<ApiResponse<null>> {
   if (error instanceof ZodError) {
-    const rawFieldErrors = error.flatten().fieldErrors;
+    const flattened = z.flattenError(error);
+    const message =
+      flattened.formErrors && flattened.formErrors.length > 0
+        ? flattened.formErrors.join("; ")
+        : "Validation failed";
+
     const fieldErrors: Record<string, string[]> = {};
-    for (const [key, value] of Object.entries(rawFieldErrors)) {
+    for (const [key, value] of Object.entries(flattened.fieldErrors)) {
       if (Array.isArray(value) && value.length > 0) {
         fieldErrors[key] = value.map(String);
       }
@@ -27,7 +32,7 @@ export function handleApiError(error: unknown): NextResponse<ApiResponse<null>> 
         success: false,
         data: null,
         error: {
-          message: "Validation failed",
+          message,
           fieldErrors,
         },
       },
@@ -108,6 +113,20 @@ export function handleApiError(error: unknown): NextResponse<ApiResponse<null>> 
         "code" in error && typeof error.code === "string"
           ? error.code
           : undefined;
+
+      if (code === "P1001" || code === "P2024") {
+        logger.error({ err: error, code }, "Database availability error");
+        return NextResponse.json<ApiResponse<null>>(
+          {
+            success: false,
+            data: null,
+            error: {
+              message: "Internal server error",
+            },
+          },
+          { status: 500 }
+        );
+      }
 
       if (code === "P2025") {
         return NextResponse.json<ApiResponse<null>>(

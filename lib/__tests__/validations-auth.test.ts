@@ -4,6 +4,7 @@ import {
   signUpSchema,
   otpSchema,
   signupEmailSchema,
+  backupCodeSchema,
 } from "@/lib/validations/auth";
 
 describe("auth validation schemas", () => {
@@ -102,6 +103,21 @@ describe("auth validation schemas", () => {
 
     it("rejects codes longer than 6 digits", () => {
       const result = otpSchema.safeParse({ code: "1234567" });
+      expect(result.success).toBe(false);
+    });
+  });
+
+  describe("backupCodeSchema", () => {
+    it("accepts non-empty backup code strings", () => {
+      const result = backupCodeSchema.safeParse({ code: "a1b2-c3d4-e5f6" });
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.code).toBe("a1b2-c3d4-e5f6");
+      }
+    });
+
+    it("rejects empty backup code", () => {
+      const result = backupCodeSchema.safeParse({ code: "   " });
       expect(result.success).toBe(false);
     });
   });

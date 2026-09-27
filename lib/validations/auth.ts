@@ -43,3 +43,12 @@ export const otpSchema = z.object({
 });
 
 export type OtpInput = z.infer<typeof otpSchema>;
+
+/**
+ * Schema for backup code verification.
+ */
+export const backupCodeSchema = z.object({
+  code: z.string().trim().min(1, "Enter your backup code"),
+});
+
+export type BackupCodeInput = z.infer<typeof backupCodeSchema>;

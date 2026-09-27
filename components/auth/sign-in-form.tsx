@@ -18,15 +18,17 @@ export interface SignInFormProps {
   returnTo: string | null;
 }
 
+type SecondFactorStrategy = "email_code" | "totp" | "phone_code" | "backup_code";
+
 /**
- * Sign-in form supporting credentials, OAuth, and email OTP second-factor challenge.
+ * Sign-in form supporting credentials, OAuth, and multi-factor authentication challenges.
  */
 export function SignInForm({ returnTo }: SignInFormProps) {
   const [step, setStep] = useState<"form" | "otp">("form");
   const [formError, setFormError] = useState<string | null>(null);
-  const [secondFactorStrategy, setSecondFactorStrategy] = useState<
-    "email_code" | "totp" | "phone_code" | "backup_code"
-  >("email_code");
+  const [secondFactorStrategy, setSecondFactorStrategy] =
+    useState<SecondFactorStrategy>("email_code");
+  const [availableStrategies, setAvailableStrategies] = useState<SecondFactorStrategy[]>([]);
 
   const router = useRouter();
   const { signIn, setActive, isLoaded } = useSignIn();
@@ -48,10 +50,39 @@ export function SignInForm({ returnTo }: SignInFormProps) {
     return <div className="h-64" aria-hidden />;
   }
 
+  const handleSelectStrategy = async (strategy: SecondFactorStrategy) => {
+    setSecondFactorStrategy(strategy);
+    if (!signIn) return;
+    try {
+      if (strategy === "phone_code") {
+        const factor = signIn.supportedSecondFactors?.find((f) => f.strategy === "phone_code") as
+          | { strategy: "phone_code"; phoneNumberId?: string }
+          | undefined;
+        await signIn.prepareSecondFactor({
+          strategy: "phone_code",
+          ...(factor?.phoneNumberId ? { phoneNumberId: factor.phoneNumberId } : {}),
+        } as Parameters<typeof signIn.prepareSecondFactor>[0]);
+      } else if (strategy === "email_code") {
+        const factor = signIn.supportedSecondFactors?.find((f) => f.strategy === "email_code") as
+          | { strategy: "email_code"; emailAddressId?: string }
+          | undefined;
+        await signIn.prepareSecondFactor({
+          strategy: "email_code",
+          ...(factor?.emailAddressId ? { emailAddressId: factor.emailAddressId } : {}),
+        } as Parameters<typeof signIn.prepareSecondFactor>[0]);
+      }
+    } catch {
+      setFormError("Could not switch verification method. Please try again.");
+    }
+  };
+
   if (step === "otp") {
     return (
       <OtpVerifyForm
         returnTo={returnTo}
+        strategy={secondFactorStrategy}
+        availableStrategies={availableStrategies}
+        onSelectStrategy={handleSelectStrategy}
         onVerify={async (code) => {
           const r = await signIn.attemptSecondFactor({
             strategy: secondFactorStrategy,
@@ -86,8 +117,18 @@ export function SignInForm({ returnTo }: SignInFormProps) {
         router.refresh();
       } else if (result.status === "complete") {
         setFormError("Session could not be created. Please try again.");
-      } else if (result.status === "needs_second_factor") {
+      } else if (
+        result.status === "needs_second_factor" ||
+        (result.status as string) === "needs_client_trust"
+      ) {
         const supported = result.supportedSecondFactors ?? [];
+        const strategies = supported
+          .map((f) => f.strategy as SecondFactorStrategy)
+          .filter((s) => ["email_code", "totp", "phone_code", "backup_code"].includes(s));
+
+        setAvailableStrategies(strategies);
+
+        // Pick primary factor
         const factor =
           supported.find((f) => f.strategy === "email_code") ??
           supported.find((f) => f.strategy === "totp") ??
@@ -95,17 +136,29 @@ export function SignInForm({ returnTo }: SignInFormProps) {
           supported.find((f) => f.strategy === "backup_code");
 
         if (factor) {
-          const strategy = factor.strategy as "email_code" | "totp" | "phone_code" | "backup_code";
+          const strategy = factor.strategy as SecondFactorStrategy;
           setSecondFactorStrategy(strategy);
-          if (strategy === "email_code" || strategy === "phone_code") {
-            await signIn.prepareSecondFactor({ strategy });
+          if (strategy === "phone_code") {
+            const phoneFactor = factor as { strategy: "phone_code"; phoneNumberId?: string };
+            await signIn.prepareSecondFactor({
+              strategy: "phone_code",
+              ...(phoneFactor.phoneNumberId ? { phoneNumberId: phoneFactor.phoneNumberId } : {}),
+            } as Parameters<typeof signIn.prepareSecondFactor>[0]);
+          } else if (strategy === "email_code") {
+            const emailFactor = factor as { strategy: "email_code"; emailAddressId?: string };
+            await signIn.prepareSecondFactor({
+              strategy: "email_code",
+              ...(emailFactor.emailAddressId ? { emailAddressId: emailFactor.emailAddressId } : {}),
+            } as Parameters<typeof signIn.prepareSecondFactor>[0]);
           }
           setStep("otp");
         } else {
           setFormError("Your account requires an MFA method not yet supported. Contact support.");
         }
       } else if (result.status === "needs_new_password") {
-        setFormError("Password reset required. Please use the password reset link sent to your email.");
+        setFormError(
+          "Password reset required. Please use the password reset link sent to your email.",
+        );
       } else if (result.status === "needs_first_factor") {
         setFormError("Please verify your sign-in method. Contact support if this persists.");
       } else {
@@ -187,20 +240,21 @@ export function SignInForm({ returnTo }: SignInFormProps) {
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="w-full"
+          className="w-full bg-accent-primary text-base font-semibold hover:bg-accent-primary/90"
         >
           {isSubmitting ? "Signing in…" : "Sign in"}
         </Button>
       </form>
 
-      <div className="text-center text-sm text-muted">
+      <p className="text-center text-sm text-muted">
+        Don&apos;t have an account?{" "}
         <Link
           href={`/sign-up${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ""}`}
           className="text-accent-primary hover:underline"
         >
-          Don&apos;t have an account? Sign up
+          Sign up
         </Link>
-      </div>
+      </p>
     </div>
   );
 }

@@ -18,7 +18,34 @@ export interface SignInFormProps {
   returnTo: string | null;
 }
 
-type SecondFactorStrategy = "email_code" | "totp" | "phone_code" | "backup_code";
+export type SecondFactorStrategy = "totp" | "phone_code" | "email_code" | "backup_code";
+
+/**
+ * Helper to select default MFA factor using standard priority:
+ * totp -> phone_code -> email_code -> backup_code
+ */
+export function selectDefaultSecondFactor<
+  T extends { strategy: string }
+>(supported: T[]): T | undefined {
+  return (
+    supported.find((f) => f.strategy === "totp") ??
+    supported.find((f) => f.strategy === "phone_code") ??
+    supported.find((f) => f.strategy === "email_code") ??
+    supported.find((f) => f.strategy === "backup_code")
+  );
+}
+
+/**
+ * Helper to filter supported MFA strategies from Clerk second factors.
+ */
+export function extractAvailableStrategies(
+  supported: { strategy: string }[]
+): SecondFactorStrategy[] {
+  const allowed: SecondFactorStrategy[] = ["totp", "phone_code", "email_code", "backup_code"];
+  return supported
+    .map((f) => f.strategy as SecondFactorStrategy)
+    .filter((s) => allowed.includes(s));
+}
 
 /**
  * Sign-in form supporting credentials, OAuth, and multi-factor authentication challenges.
@@ -27,7 +54,7 @@ export function SignInForm({ returnTo }: SignInFormProps) {
   const [step, setStep] = useState<"form" | "otp">("form");
   const [formError, setFormError] = useState<string | null>(null);
   const [secondFactorStrategy, setSecondFactorStrategy] =
-    useState<SecondFactorStrategy>("email_code");
+    useState<SecondFactorStrategy>("totp");
   const [availableStrategies, setAvailableStrategies] = useState<SecondFactorStrategy[]>([]);
 
   const router = useRouter();
@@ -80,6 +107,7 @@ export function SignInForm({ returnTo }: SignInFormProps) {
   if (step === "otp") {
     return (
       <OtpVerifyForm
+        key={secondFactorStrategy}
         returnTo={returnTo}
         strategy={secondFactorStrategy}
         availableStrategies={availableStrategies}
@@ -119,27 +147,17 @@ export function SignInForm({ returnTo }: SignInFormProps) {
         router.refresh();
       } else if (result.status === "complete") {
         setFormError("Session could not be created. Please try again.");
-      } else if (
-        result.status === "needs_second_factor" ||
-        (result.status as string) === "needs_client_trust"
-      ) {
+      } else if (result.status === "needs_second_factor") {
         const supported = result.supportedSecondFactors ?? [];
-        const strategies = supported
-          .map((f) => f.strategy as SecondFactorStrategy)
-          .filter((s) => ["email_code", "totp", "phone_code", "backup_code"].includes(s));
+        const strategies = extractAvailableStrategies(supported);
 
         setAvailableStrategies(strategies);
 
-        // Pick primary factor
-        const factor =
-          supported.find((f) => f.strategy === "email_code") ??
-          supported.find((f) => f.strategy === "totp") ??
-          supported.find((f) => f.strategy === "phone_code") ??
-          supported.find((f) => f.strategy === "backup_code");
+        // Pick primary factor based on default priority (totp -> phone_code -> email_code -> backup_code)
+        const factor = selectDefaultSecondFactor(supported);
 
         if (factor) {
           const strategy = factor.strategy as SecondFactorStrategy;
-          setSecondFactorStrategy(strategy);
           if (strategy === "phone_code") {
             const phoneFactor = factor as { strategy: "phone_code"; phoneNumberId?: string };
             await signIn.prepareSecondFactor({
@@ -153,16 +171,34 @@ export function SignInForm({ returnTo }: SignInFormProps) {
               ...(emailFactor.emailAddressId ? { emailAddressId: emailFactor.emailAddressId } : {}),
             } as Parameters<typeof signIn.prepareSecondFactor>[0]);
           }
+          // Only update strategy and transition after factor preparation resolves successfully
+          setSecondFactorStrategy(strategy);
           setStep("otp");
         } else {
           setFormError("Your account requires an MFA method not yet supported. Contact support.");
         }
+      } else if (result.status === "needs_first_factor") {
+        const supportedFirst = result.supportedFirstFactors ?? [];
+        const emailLinkFactor = supportedFirst.find((f) => f.strategy === "email_link");
+        const codeFactor = supportedFirst.find(
+          (f) => f.strategy === "email_code" || f.strategy === "phone_code"
+        );
+
+        if (emailLinkFactor) {
+          setFormError(
+            "A verification link was sent to your email. Please open the link on this device to complete sign-in."
+          );
+        } else if (codeFactor) {
+          setFormError(
+            "Additional verification required. Please verify your email or phone to proceed."
+          );
+        } else {
+          setFormError("Please verify your sign-in method. Contact support if this persists.");
+        }
       } else if (result.status === "needs_new_password") {
         setFormError(
-          "Password reset required. Please use the password reset link sent to your email.",
+          "Password reset required. Please use the password reset link sent to your email."
         );
-      } else if (result.status === "needs_first_factor") {
-        setFormError("Please verify your sign-in method. Contact support if this persists.");
       } else {
         setFormError(`Unexpected status: ${result.status}`);
       }
@@ -212,12 +248,20 @@ export function SignInForm({ returnTo }: SignInFormProps) {
         </div>
 
         <div className="space-y-2">
-          <label
-            htmlFor="password"
-            className="block text-sm font-medium text-primary"
-          >
-            Password
-          </label>
+          <div className="flex items-center justify-between">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-primary"
+            >
+              Password
+            </label>
+            <Link
+              href="/forgot-password"
+              className="text-xs text-accent-primary hover:underline"
+            >
+              Forgot password?
+            </Link>
+          </div>
           <Input
             id="password"
             type="password"
@@ -248,7 +292,7 @@ export function SignInForm({ returnTo }: SignInFormProps) {
         </Button>
       </form>
 
-      <p className="text-center text-sm text-muted">
+      <p className="text-center text-xs text-muted">
         Don&apos;t have an account?{" "}
         <Link
           href={`/sign-up${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ""}`}

@@ -59,7 +59,11 @@ export function OtpVerifyForm({
       const result = await onVerify(data.code);
       if (result.status === "complete" && result.createdSessionId) {
         startTransition(async () => {
-          await onSuccess(result.createdSessionId as string);
+          try {
+            await onSuccess(result.createdSessionId as string);
+          } catch {
+            setFormError("Failed to activate session. Please try signing in again.");
+          }
         });
       } else {
         setFormError(`Unexpected status: ${result.status}`);
@@ -100,6 +104,19 @@ export function OtpVerifyForm({
     }
   };
 
+  const getStrategyButtonLabel = (strat: "email_code" | "phone_code" | "totp" | "backup_code") => {
+    switch (strat) {
+      case "totp":
+        return "Use Authenticator app (TOTP)";
+      case "phone_code":
+        return "Send code via SMS";
+      case "email_code":
+        return "Send code via Email";
+      case "backup_code":
+        return "Use emergency backup recovery code";
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="space-y-2 text-center">
@@ -118,7 +135,7 @@ export function OtpVerifyForm({
           </label>
           <Input
             id="code"
-            type={isBackupCode ? "text" : "text"}
+            type="text"
             inputMode={isBackupCode ? "text" : "numeric"}
             autoComplete={isBackupCode ? "off" : "one-time-code"}
             maxLength={isBackupCode ? 32 : 6}
@@ -152,27 +169,19 @@ export function OtpVerifyForm({
 
       {availableStrategies && availableStrategies.length > 1 && onSelectStrategy && (
         <div className="pt-2 text-center space-y-2">
-          {!isBackupCode && availableStrategies.includes("backup_code") && (
-            <button
-              type="button"
-              onClick={() => onSelectStrategy("backup_code")}
-              className="text-xs text-accent-primary hover:underline"
-            >
-              Use a backup recovery code instead
-            </button>
-          )}
-          {isBackupCode && (
-            <button
-              type="button"
-              onClick={() => {
-                const alt = availableStrategies.find((s) => s !== "backup_code") ?? "email_code";
-                onSelectStrategy(alt);
-              }}
-              className="text-xs text-accent-primary hover:underline"
-            >
-              Use standard verification method
-            </button>
-          )}
+          {availableStrategies
+            .filter((s) => s !== strategy)
+            .map((altStrategy) => (
+              <div key={altStrategy}>
+                <button
+                  type="button"
+                  onClick={() => onSelectStrategy(altStrategy)}
+                  className="text-xs text-accent-primary hover:underline"
+                >
+                  {getStrategyButtonLabel(altStrategy)}
+                </button>
+              </div>
+            ))}
         </div>
       )}
     </div>

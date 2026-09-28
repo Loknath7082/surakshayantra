@@ -19,13 +19,20 @@ export const signInSchema = z.object({
 
 export type SignInInput = z.infer<typeof signInSchema>;
 
+const signupPasswordSchema = z
+  .string()
+  .min(8, "Password must be at least 8 characters")
+  .regex(/[A-Za-z]/, "Password must include at least one letter")
+  .regex(/[0-9]/, "Password must include at least one number")
+  .regex(/[@#$%&*]/, "Password must include at least one special character (@ # $ % & *)");
+
 /**
  * Schema for sign-up form validation.
  */
 export const signUpSchema = z
   .object({
     email: z.string().trim().toLowerCase().pipe(z.email("Please enter a valid email address")),
-    password: z.string().min(8, "Password must be at least 8 characters"),
+    password: signupPasswordSchema,
     confirmPassword: z.string().min(1, "Please confirm your password"),
   })
   .refine((data) => data.password === data.confirmPassword, {

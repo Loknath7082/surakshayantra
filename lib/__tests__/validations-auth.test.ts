@@ -50,20 +50,35 @@ describe("auth validation schemas", () => {
   });
 
   describe("signUpSchema", () => {
-    it("accepts valid signup input with matching passwords", () => {
-      const result = signUpSchema.safeParse({
-        email: "user@company.com",
-        password: "securepassword123",
-        confirmPassword: "securepassword123",
-      });
+    const validSignup = {
+      email: "user@company.com",
+      password: "Abcd12@#",
+      confirmPassword: "Abcd12@#",
+    };
+
+    it("accepts a valid 8-character password with letter, number, and allowed special", () => {
+      const result = signUpSchema.safeParse(validSignup);
       expect(result.success).toBe(true);
     });
+
+    it.each(["@", "#", "$", "%", "&", "*"] as const)(
+      "accepts allowed special character %s",
+      (special) => {
+        const password = `Abcd12${special}x`;
+        const result = signUpSchema.safeParse({
+          email: "user@company.com",
+          password,
+          confirmPassword: password,
+        });
+        expect(result.success).toBe(true);
+      },
+    );
 
     it("rejects password shorter than 8 characters", () => {
       const result = signUpSchema.safeParse({
         email: "user@company.com",
-        password: "short",
-        confirmPassword: "short",
+        password: "Ab1@xyz",
+        confirmPassword: "Ab1@xyz",
       });
       expect(result.success).toBe(false);
       if (!result.success) {
@@ -71,11 +86,65 @@ describe("auth validation schemas", () => {
       }
     });
 
+    it("rejects password with no letter", () => {
+      const result = signUpSchema.safeParse({
+        email: "user@company.com",
+        password: "1234567@",
+        confirmPassword: "1234567@",
+      });
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.issues.some((issue) => issue.message.includes("letter"))).toBe(true);
+      }
+    });
+
+    it("rejects password with no number", () => {
+      const result = signUpSchema.safeParse({
+        email: "user@company.com",
+        password: "Abcdefg@",
+        confirmPassword: "Abcdefg@",
+      });
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.issues.some((issue) => issue.message.includes("number"))).toBe(true);
+      }
+    });
+
+    it("rejects password with no allowed special character", () => {
+      const result = signUpSchema.safeParse({
+        email: "user@company.com",
+        password: "Abcd1234",
+        confirmPassword: "Abcd1234",
+      });
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(
+          result.error.issues.some((issue) => issue.message.includes("special character")),
+        ).toBe(true);
+      }
+    });
+
+    it("rejects < or > in place of an allowed special character", () => {
+      for (const password of ["Abcd123<", "Abcd123>"]) {
+        const result = signUpSchema.safeParse({
+          email: "user@company.com",
+          password,
+          confirmPassword: password,
+        });
+        expect(result.success).toBe(false);
+        if (!result.success) {
+          expect(
+            result.error.issues.some((issue) => issue.message.includes("special character")),
+          ).toBe(true);
+        }
+      }
+    });
+
     it("rejects mismatched passwords", () => {
       const result = signUpSchema.safeParse({
         email: "user@company.com",
-        password: "securepassword123",
-        confirmPassword: "differentpassword456",
+        password: "Abcd12@#",
+        confirmPassword: "Abcd12$*",
       });
       expect(result.success).toBe(false);
       if (!result.success) {

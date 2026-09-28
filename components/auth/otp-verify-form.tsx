@@ -21,6 +21,7 @@ export interface OtpVerifyFormProps {
   strategy?: "email_code" | "phone_code" | "totp" | "backup_code";
   availableStrategies?: ("email_code" | "phone_code" | "totp" | "backup_code")[];
   onSelectStrategy?: (strategy: "email_code" | "phone_code" | "totp" | "backup_code") => void;
+  externalError?: string | null;
 }
 
 /**
@@ -32,10 +33,12 @@ export function OtpVerifyForm({
   strategy = "email_code",
   availableStrategies,
   onSelectStrategy,
+  externalError,
 }: OtpVerifyFormProps) {
   const [formError, setFormError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const isBackupCode = strategy === "backup_code";
+  const displayedError = formError || externalError;
 
   const {
     register,
@@ -132,9 +135,9 @@ export function OtpVerifyForm({
           )}
         </div>
 
-        {formError && (
+        {displayedError && (
           <p role="alert" className="text-sm text-state-error">
-            {formError}
+            {displayedError}
           </p>
         )}
 

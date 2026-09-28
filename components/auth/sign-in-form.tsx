@@ -51,8 +51,8 @@ export function SignInForm({ returnTo }: SignInFormProps) {
   }
 
   const handleSelectStrategy = async (strategy: SecondFactorStrategy) => {
-    setSecondFactorStrategy(strategy);
     if (!signIn) return;
+    setFormError(null);
     try {
       if (strategy === "phone_code") {
         const factor = signIn.supportedSecondFactors?.find((f) => f.strategy === "phone_code") as
@@ -71,6 +71,7 @@ export function SignInForm({ returnTo }: SignInFormProps) {
           ...(factor?.emailAddressId ? { emailAddressId: factor.emailAddressId } : {}),
         } as Parameters<typeof signIn.prepareSecondFactor>[0]);
       }
+      setSecondFactorStrategy(strategy);
     } catch {
       setFormError("Could not switch verification method. Please try again.");
     }
@@ -83,6 +84,7 @@ export function SignInForm({ returnTo }: SignInFormProps) {
         strategy={secondFactorStrategy}
         availableStrategies={availableStrategies}
         onSelectStrategy={handleSelectStrategy}
+        externalError={formError}
         onVerify={async (code) => {
           const r = await signIn.attemptSecondFactor({
             strategy: secondFactorStrategy,
